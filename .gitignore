@@ -1,0 +1,10 @@
+minimal_gperftools_libunwind_helper
+cpu_profile.out*
+core*
+
+artifacts/
+
+third_party/build/
+third_party/downloads/
+third_party/install/
+third_party/src/

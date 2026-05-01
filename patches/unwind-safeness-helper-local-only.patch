@@ -1,0 +1,45 @@
+diff --git a/unwind_safeness_helper.c b/unwind_safeness_helper.c
+--- a/unwind_safeness_helper.c
++++ b/unwind_safeness_helper.c
+@@ -7,6 +7,10 @@
+ 
+ #define EXPORT_API __attribute__((visibility("default")))
+ 
++#define stringify_1(x) #x
++#define stringify(x) stringify_1(x)
++#define unw_symbol(name) stringify(UNW_OBJ(name))
++
+ typedef int (*dl_iterate_phdr_cbtype)(struct dl_phdr_info *, size_t, void *);
+ 
+ typedef void *(*dlopen_ftype)(const char *filename, int flag);
+@@ -48,9 +52,9 @@ void init(void)
+ 	orig_dlopen = must_dlsym("dlopen");
+ 	orig_dlclose = must_dlsym("dlclose");
+ 	orig_dl_iterate_phdr = must_dlsym("dl_iterate_phdr");
+-	orig_unw_init_local = must_dlsym("unw_init_local");
+-	orig_unw_get_reg = must_dlsym("unw_get_reg");
+-	orig_unw_step = must_dlsym("unw_step");
++	orig_unw_init_local = must_dlsym(unw_symbol(init_local));
++	orig_unw_get_reg = must_dlsym(unw_symbol(get_reg));
++	orig_unw_step = must_dlsym(unw_symbol(step));
+ }
+ 
+ #define wrap_call(func, ...)				\
+@@ -88,14 +92,14 @@ int unw_step(unw_cursor_t *cursor)
+ {
+ 	if (unsafeness_depth)
+ 		return 0;
+-	return wrap_call(unw_step, cursor);
++	return wrap_call(orig_unw_step, cursor);
+ }
+ 
+ EXPORT_API
+ int unw_get_reg(unw_cursor_t *cursor, unw_regnum_t reg, unw_word_t *out)
+ {
+ 	if (unsafeness_depth)
+ 		return -UNW_EUNSPEC;
+-	return wrap_call(unw_get_reg, cursor, reg, out);
++	return wrap_call(orig_unw_get_reg, cursor, reg, out);
+ }
+ 
+ EXPORT_API
