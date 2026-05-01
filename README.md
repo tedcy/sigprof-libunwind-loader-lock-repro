@@ -83,7 +83,6 @@ T _Ux86_64_step
 ```bash
 env LD_PRELOAD="$PWD/third_party/install/lib/unwind_safeness_helper_upstream.so" \
   LD_LIBRARY_PATH="$PWD:$PWD/third_party/install/lib" \
-  CPUPROFILE_FREQUENCY=4000 \
   ./minimal_gperftools_libunwind_helper
 ```
 
@@ -100,7 +99,6 @@ Aborted
 
 ```bash
 env LD_LIBRARY_PATH="$PWD:$PWD/third_party/install/lib" \
-  CPUPROFILE_FREQUENCY=4000 \
   ./minimal_gperftools_libunwind_helper
 ```
 
@@ -109,7 +107,6 @@ env LD_LIBRARY_PATH="$PWD:$PWD/third_party/install/lib" \
 ```bash
 env LD_PRELOAD="$PWD/third_party/install/lib/unwind_safeness_helper.so" \
   LD_LIBRARY_PATH="$PWD:$PWD/third_party/install/lib" \
-  CPUPROFILE_FREQUENCY=4000 \
   ./minimal_gperftools_libunwind_helper
 ```
 
@@ -118,17 +115,12 @@ env LD_PRELOAD="$PWD/third_party/install/lib/unwind_safeness_helper.so" \
 ```bash
 env LD_PRELOAD="$PWD/third_party/install/lib/unwind_safeness_helper_upstream.so" \
   LD_LIBRARY_PATH="$PWD:$PWD/third_party/install/lib" \
-  CPUPROFILE_FREQUENCY=4000 \
   ./minimal_gperftools_libunwind_helper
 ```
 
-这些运行命令都会设置：
-
-```text
-CPUPROFILE_FREQUENCY=4000
-```
-
 demo 静态链接本地构建的 gperftools，并动态链接本地构建的 libunwind，运行时不再额外指定 `TCMALLOC_STACKTRACE_METHOD`。
+
+demo 不设置 `CPUPROFILE_FREQUENCY`，使用 gperftools 2.7 默认的 100Hz 采样频率即可复现。实测 1Hz 在当前 20 秒运行窗口内没有复现；4000Hz 只是加快命中危险窗口，不是触发链路的必要条件。
 
 预期对比：
 

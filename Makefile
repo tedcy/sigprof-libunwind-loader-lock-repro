@@ -29,13 +29,13 @@ $(LIBDIR)/unwind_safeness_helper.so $(LIBDIR)/unwind_safeness_helper_upstream.so
 	$(MAKE) deps
 
 run: $(TARGET)
-	LD_LIBRARY_PATH=$(RUN_LIB_PATH) CPUPROFILE_FREQUENCY=4000 ./$(TARGET)
+	LD_LIBRARY_PATH=$(RUN_LIB_PATH) ./$(TARGET)
 
 run-helper: $(TARGET) $(LIBDIR)/unwind_safeness_helper.so
-	LD_PRELOAD=$(LIBDIR)/unwind_safeness_helper.so LD_LIBRARY_PATH=$(RUN_LIB_PATH) CPUPROFILE_FREQUENCY=4000 ./$(TARGET)
+	LD_PRELOAD=$(LIBDIR)/unwind_safeness_helper.so LD_LIBRARY_PATH=$(RUN_LIB_PATH) ./$(TARGET)
 
 run-upstream-helper: $(TARGET) $(LIBDIR)/unwind_safeness_helper_upstream.so
-	LD_PRELOAD=$(LIBDIR)/unwind_safeness_helper_upstream.so LD_LIBRARY_PATH=$(RUN_LIB_PATH) CPUPROFILE_FREQUENCY=4000 ./$(TARGET)
+	LD_PRELOAD=$(LIBDIR)/unwind_safeness_helper_upstream.so LD_LIBRARY_PATH=$(RUN_LIB_PATH) ./$(TARGET)
 
 clean:
 	rm -f $(TARGET) cpu_profile.out
